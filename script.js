@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', assignEvents);
 
 function assignEvents() {
 	var bars = [];
-	var barElems = document.querySelectorAll('.bar');
+	var barElems = document.querySelectorAll('.bar_wrapper');
 
 	Array.prototype.forEach.call(barElems, function(elem) {
 		bars.push({
@@ -21,10 +21,10 @@ function stickyBars(bars) {
 		var diff = elem.top - i * elHeight;
 
 		if(windowScroll().top > diff) {
-			elem.el.classList.add('nailed');
+			isFF() ? elem.el.classList.add('nailed-ff') : elem.el.classList.add('nailed');
 		} else {
-			if(elem.el.classList.contains('nailed')) {
-				elem.el.classList.remove('nailed');
+			if(elem.el.classList.contains('nailed') || elem.el.classList.add('nailed-ff')) {
+				elem.el.classList.remove('nailed') || elem.el.classList.add('nailed-ff');
 			}
 		}
 
@@ -40,9 +40,15 @@ function windowScroll() {
 
 function getCoords(elem) {
 	var box = elem.getBoundingClientRect();
+	var winY = window.pageYOffset || document.documentElement.scrollTop;
+	var winX = window.pageXOffset || document.documentElement.scrollLeft;
 
 	return {
-		top: box.top + pageYOffset,
-		left: box.left + pageXOffset
+		top: box.top + winY,
+		left: box.left + winX
 	}
+}
+
+function isFF() {
+	return navigator.userAgent.match(/firefox/gi);
 }
