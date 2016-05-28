@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', assignEvents);
 
 function assignEvents() {
 	var bars = [];
-	var barElems = document.querySelectorAll('.bar_wrapper');
+	var barElems = document.querySelectorAll('.bar');
 
 	Array.prototype.forEach.call(barElems, function(elem) {
 		bars.push({
@@ -11,20 +11,19 @@ function assignEvents() {
 		});
 	})
 
-	window.addEventListener('scroll', stickyBars.bind(null, bars))
+	document.addEventListener('scroll', stickyBars.bind(null, bars));
+	document.addEventListener('touchmove', stickyBars.bind(null, bars));
 }
 
 function stickyBars(bars) {
 
 	bars.forEach(function(elem, i) {
-		var elHeight = elem.el.offsetHeight;
-		var diff = elem.top - i * elHeight;
 
-		if(windowScroll().top > diff) {
-			isFF() ? elem.el.classList.add('nailed-ff') : elem.el.classList.add('nailed');
+		if(windowScroll().top > elem.top) {
+			elem.el.classList.add(isFF() ? 'nailed-ff' : 'nailed');
 		} else {
-			if(elem.el.classList.contains('nailed') || elem.el.classList.add('nailed-ff')) {
-				elem.el.classList.remove('nailed') || elem.el.classList.add('nailed-ff');
+			if(elem.el.classList.contains('nailed') || elem.el.classList.contains('nailed-ff')) {
+				elem.el.classList.remove('nailed') || elem.el.classList.remove('nailed-ff');
 			}
 		}
 
@@ -40,12 +39,10 @@ function windowScroll() {
 
 function getCoords(elem) {
 	var box = elem.getBoundingClientRect();
-	var winY = window.pageYOffset || document.documentElement.scrollTop;
-	var winX = window.pageXOffset || document.documentElement.scrollLeft;
 
 	return {
-		top: box.top + winY,
-		left: box.left + winX
+		top: box.top + windowScroll().top,
+		left: box.left + windowScroll().left
 	}
 }
 
