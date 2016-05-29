@@ -7,7 +7,8 @@ function assignEvents() {
 	Array.prototype.forEach.call(barElems, function(elem) {
 		bars.push({
 			el: elem,
-			top: getCoords(elem).top
+			top: getCoords(elem).top,
+			height: elem.offsetHeight
 		});
 	})
 
